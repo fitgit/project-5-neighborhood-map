@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Places Searchbox</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    #target {
+        width: 345px;
+    }
+    </style>
+</head>
+<body>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box" data-bind="">
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBafYKiLHyRjfGFK1FG5O5oD9X4s-yuTm8&libraries=places&callback=koViewModelInstance.initAutocomplete"
+    async defer></script>
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
