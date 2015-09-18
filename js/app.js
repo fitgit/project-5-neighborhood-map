@@ -1,3 +1,6 @@
+var markers=[];
+var places=[];
+
 
 var ViewModel = function (){
 	koViewModelInstance = this;
@@ -23,25 +26,31 @@ var ViewModel = function (){
 			searchBox.setBounds(map.getBounds());
 		});
 
-		var markers = [];
-		// [START region_getplaces]
-		// Listen for the event fired when the user selects a prediction and retrieve
-		// more details for that place.
-		searchBox.addListener('places_changed', function() {
-			console.log("4");
-			var places = searchBox.getPlaces();
-			console.log("htting places_changed=" + JSON.stringify(places));
-			if (places.length == 0) {
-				return;
-			}
+		function clearMarkers(){
 			// Clear out the old markers.
 			markers.forEach(function(marker) {
 				console.log("5");	
 				marker.setMap(null);
 			});
 			markers = [];
-			// For each place, get the icon, name and location.
+		}	
+
+		searchBox.addListener('places_changed', function() {
+			console.log("4");
+			places = searchBox.getPlaces();
+			console.log("htting places_changed=" + JSON.stringify(places));
+			if (places.length == 0) {
+				return;
+			}
+			clearMarkers();
 			var bounds = new google.maps.LatLngBounds();
+			createMarkers(bounds);
+			map.fitBounds(bounds);
+		});	
+
+
+		function createMarkers(bounds) {
+			// For each place, get the icon, name and location.
 			places.forEach(function(place) {
 				console.log("6");	
 				var icon = {
@@ -122,8 +131,8 @@ var ViewModel = function (){
 			    	bounds.extend(place.geometry.location);
 			    }
 			}); //each place
-			map.fitBounds(bounds);
-		}); //searchBox Listener
+        } //createMarkers
+			
 	} //initAutoComplete
 
 } //ViewModel
