@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Places Searchbox</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-    #target {
-        width: 345px;
-    }
-    </style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    
 </head>
 <body>
-    <input id="pac-input" class="controls" type="text" placeholder="Search Box" data-bind="">
-    <div id="map"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBafYKiLHyRjfGFK1FG5O5oD9X4s-yuTm8&libraries=places&callback=koViewModelInstance.initAutocomplete"
-    async defer></script>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <h1>Restaurants Googler - Middletown,New Jersey</h1>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+
+                <!-- place searchbox with a binding to the search term -->
+                <input id="searchrBox" placeholder="search ....." type="search" data-bind="textInput: filter,click:filterMarkers, event: {keyup: filterMarkers}" />
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <ul  class= "list-unstyled" data-bind="foreach: filterList" >
+                   <li data-bind="text: name,click:$parent.openMarker"></li>
+                </ul>
+            </div>
+        </div> 
+        <div class="row">
+            <div id="map" class="col-xs-12 col-md-12 col-lg-12"></div>
+        </div>
+             
+    </div>
+    
+                      
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBafYKiLHyRjfGFK1FG5O5oD9X4s-yuTm8&libraries=places&callback=initAutocomplete" async defer></script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>
