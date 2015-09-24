@@ -10,5 +10,6 @@
 ##List View
 1. On selecting the search box, all the choices for filtering should be displayed. Which are currently on the name of the       restaurants.
 2. On entering a fuzzy search value, appropriate restaurant names should be displayed.
+
    ex: on entering the letter "e" all names having the letter "e" should be displayed.
 3. Clicking on the appropriate name from the list view, should open an infoWindow with name,address,phone number and url.       Clicking on the url should open a new/window tab with the redericted url.
