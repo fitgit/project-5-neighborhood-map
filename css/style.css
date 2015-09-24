@@ -2,12 +2,6 @@
   box-sizing: border-box;
 }
 
-h/*tml,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}*/
 body{
   font-size: 2em;
   word-wrap: break-word;
@@ -23,58 +17,22 @@ h1 {
 
 .container {
   background-color: Lavender;
-
 }
 
 
 li:hover {
-    background-color: Lavender;
-
+  background-color: Lavender;
 }
 
 
 li {
-
   border-bottom: 1px solid black;
-
   padding: 4px;
-
 }
 
 ul {
   background-color: rgba(255,255,255,0.7);
-
 }
-
-/*input {
-  position: fixed;
-  //right: 10px;
-  //bottom: 30%;
-  height: 40px;
-  width: 200px;
-  z-index: 5;
-  //opacity: 0.5;
-  font-size: 20px;
-}
-
-#list-view {
-  position: fixed;
-  //top: 20px;
-  right: 10px;
-  width: 200px;
-  height: 40px;
-  z-index: 5;
-  font-size:20px;
-  background-color: #fff;
-}*/
-
-/*li {
-  position:fixed;
-  margin-left: 10px;
-  padding: 2px 0;
-  z-index:5;
-  font: 12px sans-serif;
-}*/
 
 @media screen and (min-width:1px)and (max-width: 450px){
   
