@@ -1,16 +1,18 @@
-* {
+/* * {
   box-sizing: border-box;
-}
+}*/
 
 body{
   font-size: 2em;
   word-wrap: break-word;
 }
+
 h1 {
   text-align: center;
   text-shadow: 2px 2px 10px #000;
   color: white;
 }
+
 #map {
   height: 700px;
 }
@@ -19,11 +21,9 @@ h1 {
   background-color: Lavender;
 }
 
-
 li:hover {
   background-color: Lavender;
 }
-
 
 li {
   border-bottom: 1px solid black;
@@ -35,7 +35,6 @@ ul {
 }
 
 @media screen and (min-width:1px)and (max-width: 450px){
-  
   body {
     font-size: 1.2em;
   }
@@ -46,7 +45,6 @@ ul {
     font-size: 1.0em;
   }
 }
-
 
 @media screen and (min-width:451px) and (max-width: 1000px){
   body {
@@ -59,7 +57,6 @@ ul {
     font-size: 1.2em;
   }
 }
-
 
 @media screen and (min-width:1001px) and (max-width: 1296px) {
   body{

@@ -3,42 +3,39 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <title>Places Searchbox</title>
+    <title>Restaurants Googler - Middletown,New Jersey</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     
 </head>
 <body>
-    
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-12 col-lg-12">
                 <h1>Restaurants Googler - Middletown,New Jersey</h1>
             </div>
         </div>
-        
         <div class="row">
             <div class="col-xs-6 col-md-6 col-lg-6">
-
-                <!-- place searchbox with a binding to the search term -->
+                <!--search text is bound to the filter in viewModel, on click, the search filter values popuup
+                and a fuzzy search is done on entering text-->
                 <input id="searchrBox" placeholder="search ....." type="search" data-bind="textInput: filter,click:filterMarkers, event: {keyup: filterMarkers}" />
             </div>
         </div> 
         <div class="row">
             <div class="col-xs-6 col-md-6 col-lg-6">
+                <!--On chosing a filter,the infoWindow representing the marker for the filter opens up with info -->
                 <ul  class= "list-unstyled" data-bind="foreach: filterList" >
                    <li data-bind="text: name,click:$parent.openMarker"></li>
                 </ul>
             </div>
         </div> 
         <div class="row">
+            <!--Display the map from google maps api -->
             <div id="map" class="col-xs-12 col-md-12 col-lg-12"></div>
-        </div>
-             
+        </div>     
     </div>
-    
-                      
-    
+    <!--Calling google maps api async -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBafYKiLHyRjfGFK1FG5O5oD9X4s-yuTm8&libraries=places&callback=initAutocomplete" async defer></script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>

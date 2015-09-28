@@ -8,7 +8,7 @@
 6. In case relevant data not found like address,phone number or url, appropriate msg is displayed.
 
 ##List View
-1. On selecting the search box, all the choices for filtering should be displayed. Which are currently on the name of the       restaurants.
+1. On selecting the search box, all the choices for filtering should be displayed. Which are currently on the name of the restaurants.
 2. On entering a fuzzy search value, appropriate restaurant names should be displayed.
 
    ex: on entering the letter "e" all names having the letter "e" should be displayed.
