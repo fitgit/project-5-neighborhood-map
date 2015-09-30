@@ -6,6 +6,27 @@ var markers=[];
 var places=[{name:"Taliercios",latitude:40.377301, longitude:-74.091952,index:0},{name:"Sono Sushi Japanese Restaurant",latitude:40.396809, longitude:-74.110285,index:1},{name:"Belford Bistro",latitude:40.416055, longitude:-74.094488,index:2},{name:"New Monmouth Diner",latitude:40.410195, longitude:-74.132247,index:3},{name:"Neelam Exotic Indian Cuisine",latitude:40.396821, longitude:-74.111353,index:4}];
 var map;
 var infowindow;
+var initHtml='<div id="content">'+
+	'<div id="siteNotice">'+
+	'<h3 id="firstHeading"></h3>'+
+	'</div>'+
+	'<div id="bodyContent">'+
+	'<h5 id="address">Loading data.....</h5>'+
+	'<h5 id="phone"></h5>'+
+	'<a id="url" href="" target="_blank"></a>' +
+	'</div>';
+/* Had defined globally to get infoWindow DOM elements only once as per review feedback.
+ * Please see the comments in getLocationData
+ *	
+*/	
+var $infoWindowContent;
+var $infoWindowAddress;
+var $infoWindowRating;
+var $infoWindowPhone;
+var $infoWindowBodyC;
+var $infoWindowUrl;
+/*	Left in place - Please see the comments in getLocationData
+var infoWindowIdDefined=false; */
 
 /*Method to clear existing Markers */
 function clearMarkers(){
@@ -41,26 +62,29 @@ function changeColor(marker){
  *	calls getLocationData, which does an API call to foursquare data.
 */
 function openInfoWindow(place,marker,infowindow){
-	var htmlString='<div id="content">'+
-	'<div id="siteNotice">'+
-	'<h3 id="firstHeading">' + marker.title+ '</h3>'+
-	'</div>'+
-	'<div id="bodyContent">'+
-	'<h5 id="address">Loading data.....</h5>'+
-	'<h5 id="phone"></h5>'+
-	'<a id="url" href="" target="_blank"></a>' +
-	'</div>';
-
-	infowindow.setContent(htmlString);
-	map.panTo(marker.getPosition());
-	infowindow.open(map,marker);
-	getLocationData(marker);
+	
+	//cacheing Location data, based on the first review feedback
+	//If not cached getLocationData from API.
+	if (typeof marker.infoWindowHtml === "undefined") {
+		console.log("going to getLocationData for this marker");
+		//changed based on review,formulate the htmlstring only once,store as a constant(initHtml).
+		var htmlString=initHtml;
+		infowindow.setContent(htmlString);
+		map.panTo(marker.getPosition());
+		infowindow.open(map,marker);
+		getLocationData(marker);
+	}
+	else{
+		console.log("getting cached data for marker");
+		infowindow.setContent(marker.infoWindowHtml);
+		map.panTo(marker.getPosition());
+		infowindow.open(map,marker);
+	}
 }
 
 /*	The Main function that instantiates a  map object, createsMarker and displays on the screen
 */
 function initAutocomplete(){
-	console.log("1");
 	map = new google.maps.Map(document.getElementById('map'), {
 		// center's the map around Middletown,NJ.
 		center: {lat: 40.396755, lng: -74.0916184},
@@ -69,12 +93,17 @@ function initAutocomplete(){
 	});
     
     infowindow = new google.maps.InfoWindow();
+    
     /* Create necessary Markers, register the eventListeners on Marker click and infoWindow close
     */
 	function createMarkers(bounds) {
 		// For each place, get the icon, name and location.
 		places.forEach(function(place) {
 			console.log("place.name=" + place.name);	
+			/*	As per my review feedback, there is a simpler way to create Markers.
+			*	Not sure how else it could be simplified.  Yes I had dynamic searchBox.getPlaces()
+			*	before, not sure what is redundant, would love to know.
+			*/
 			var icon = {
 				url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
 				size: new google.maps.Size(71, 71),
@@ -114,7 +143,7 @@ function initAutocomplete(){
 			return function(){
 				marker.clicked = false;
 				changeColor(marker);
-			}
+			};
 		})(marker));
 
 		/* Had this in place when I had dynamic search initially , doing searchbox.getPlaces.
@@ -154,22 +183,21 @@ var ViewModel = function (){
 	self.filter=ko.observable("");
 
 	//opensMarker when a list view item is clicked
-	self.openMarker=function(place){
+	self.openMarker = function(place){
 		var marker=markers[place.index];
 		marker.clicked=true;
 		changeColor(marker);	
 		openInfoWindow(place,marker,infowindow);
-	}
+	};
 
 	/*	filterMarkers is called on click(focus) inside the input textArea, to display all the locations.
      *	It is also called when a filter is entered in the text area.
      *	This method calls getFilterList , which creates a List of places matching the filter.
 	*/
-	self.filterMarkers =function(){
-		console.log("Entered filterMarker");
+	self.filterMarkers = function(){
 		self.filterList.removeAll();
 		self.getFilterList();
-	}
+	};
 
     /*	A utility function that returns all places if filter is null
      *	Returns the list of places that matches the filter.
@@ -189,15 +217,27 @@ var ViewModel = function (){
 
 	/*	Makes Marker visible for all places in the input param filterdPlaces.
 	*/
-	self.showMarkers= function (filteredPlaces){
+	self.showMarkers = function (filteredPlaces){
 		filteredPlaces.forEach(function (filteredPlace){
 			markers[filteredPlace.index].setMap(map);
 		});
 	};
 
+	self.highlightMarker = function(place){
+		var marker=markers[place.index];
+		marker.clicked=true;
+		changeColor(marker);
+	};
+
+	self.disableHighlighMarker = function(place){
+		var marker=markers[place.index];
+		marker.clicked=false;
+		changeColor(marker);
+	}
+
     /*	Makes all the Markers invisible.
 	*/
-	self.hideAllMarkers=function (){
+	self.hideAllMarkers = function (){
 		markers.forEach(function (marker){
 			marker.setMap(null);
 		});
@@ -218,11 +258,15 @@ var ViewModel = function (){
 		  var filteredPlaces = [];
 		  filteredPlaces = self.filteredItems(filter);
 		  console.log("FilteredPlaces array=" + JSON.stringify(filteredPlaces));
+		  if (filteredPlaces.length === 0){
+		  	//need to implement the add button to add data
+		  	//not sure of the api for getting latitude/longitude,so to-do for now
+		  }
 		  self.showMarkers(filteredPlaces);
 		  self.filterList(filteredPlaces);
 	  	}
 	};
-} //ViewModel end
+}; //ViewModel end
 
 /*	getLocationData, takes an input as marker, does a venue search on foursquare API, displays the
  *	data in the infoWindow on success.
@@ -230,14 +274,30 @@ var ViewModel = function (){
  *	On error, displays "Content could not be loaded"
 */
     
-function getLocationData(marker){
+var getLocationData=function(marker){
+	/*	As per the review feedback I was asked to not  define the infowindow ids over and over again.
+	 *	So I went about defining a flag and when its false(initially) to get the DOM Elements.
+	 *	On that I observed a behaviour of stale ids.The very first time, I opened an infoWindow, since my
+	 *	infoWindowIdDefined == false, I would be gettign the DOM elements and everything is good. But
+	 *	on subsequent request to getLocationData, I would have references to old elements and the infoWindow
+	 *	On the screen would have prev values or initialized value(if I setContent of the infoWindow to an initHtml)
+	 *	I have left the commented code in for you to verify and prove that I need to get the infoWindow elements
+	 *	everytime a new Marker is clicked upon.	
+	*/
+    //defining infoWindowIds once, based on the first review feedback
+    //if (infoWindowIdDefined === false) {
+		$infoWindowContent = $('#content');
+		$infoWindowAddress=$('#address');
+		$infoWindowRating=$('#rating');
+		$infoWindowPhone=$('#phone');
+		$infoWindowBodyC=$('#bodyContent');
+		$infoWindowUrl=$('#url');
+		//infoWindowIdDefined=true;
+	//}	
 
-	var $infoWindowContent = $('#content');
-	var $infoWindowAddress=$('#address');
-	var $infoWindowRating=$('#rating');
-	var $infoWindowPhone=$('#phone');
-	var $infoWindowBodyC=$('#bodyContent');
-	var $infoWindowUrl=$('#url');
+	var $infoWindowHeading = $('#firstHeading');
+	$infoWindowHeading.text(marker.title);
+
 	var lat= marker.position.lat();
 	var long = marker.position.lng();
 
@@ -254,44 +314,49 @@ function getLocationData(marker){
 	  '&query=' +'\'' +marker.title + '\'&limit=1';
 	  
 	// Use jQuery to make an AJAX request to Foursquare and update infoWindow values.
-	$.getJSON(API_ENDPOINT,function(result) {
-		//on success
-	    var venue = result.response.venues[0];
-	    console.log("venue=" +JSON.stringify(venue));
-	    var venuePhone = venue.contact.formattedPhone;
-	    var venueAddress = venue.location.formattedAddress;
-	    var venueUrl=venue.url;
-	    console.log("venue.url=" +venueUrl);
-	    //$infoWindowContent.text("");
-	    if (venuePhone)
-	    	$infoWindowPhone.text('Phone: ' +venuePhone);
-	    else
-	        $infoWindowPhone.text('Phone number not found');
+	//Changed from deprecated default success and error (jquery1.4) to done/fail as per review feedback
+	$.getJSON(API_ENDPOINT,
+		{format:"json"})
+			.done(function(result) {
+			    var venue = result.response.venues[0];
+			    console.log("venue=" +JSON.stringify(venue));
+			    var venuePhone = venue.contact.formattedPhone;
+			    var venueAddress = venue.location.formattedAddress;
+			    var venueUrl=venue.url;
+			    console.log("venue.url=" +venueUrl);
+			    
+			    if (venuePhone)
+			    	$infoWindowPhone.text('Phone: ' +venuePhone);
+			    else
+			        $infoWindowPhone.text('Phone number not found');
 
-	  	if (venueAddress) 
-	      	$infoWindowAddress.text('Address: ' +venueAddress);
-		else
-	      	$infoWindowAddress.text('Address not found');
+			  	if (venueAddress) 
+			      	$infoWindowAddress.text('Address: ' +venueAddress);
+				else
+			      	$infoWindowAddress.text('Address not found');
 
-	    if (venueUrl) {
-	      	$infoWindowUrl.text(venueUrl);
-	      	$infoWindowUrl.attr('href',venueUrl);
-	    }  	
-		else
-	      	$infoWindowUrl.replaceWith('<h5>URL not found</h5>');
-	      
+			    if (venueUrl) {
+			    	//console.log( "before,infoWindowUrl=" +$infoWindowUrl.html());
+			      	$infoWindowUrl.text(venueUrl);
+			      	$infoWindowUrl.attr('href',venueUrl);
+			      	//console.log( "after,infoWindowUrl=" +$infoWindowUrl.html());
+			    }  	
+				else
+			      	$infoWindowUrl.replaceWith('<h5>URL not found</h5>');
 
-	}).error(function(e){
-		//on error case
-		$infoWindowAddress.replaceWith('<h5>Content could not be loaded</h5>');
-
-	});
+			    //cache'ing Marker data, as per review feedback, so as to not retrieve api data for the same marker.
+			    marker.infoWindowHtml=$infoWindowContent.html();
+			}).fail(function(jqxhr, textStatus, error){
+				//on error case
+				console.log("Request Failed: " + textStatus + ' , ' + error);
+				$infoWindowAddress.replaceWith('<h5>Content could not be loaded</h5>');
+			});
     //click on the url in the infoWindow, opens a new page/tab with restaurant info.
 	$("#url").click(function() {
 	 	var target=$(this).parent().find("a");
 	    window.open(target.attr('href'));
-	   
 	});	
-}
+
+};
 
 ko.applyBindings(new ViewModel());

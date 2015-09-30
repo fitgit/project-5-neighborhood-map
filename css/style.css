@@ -1,10 +1,10 @@
 /* * {
   box-sizing: border-box;
 }*/
-
 body{
   font-size: 2em;
   word-wrap: break-word;
+  overflow: hidden;
 }
 
 h1 {
@@ -44,6 +44,9 @@ ul {
   h5{
     font-size: 1.0em;
   }
+  li{
+    font-size: 0.4em;
+  }
 }
 
 @media screen and (min-width:451px) and (max-width: 1000px){
@@ -56,6 +59,9 @@ ul {
   h5{
     font-size: 1.2em;
   }
+  li{
+    font-size: 0.6em;
+  }
 }
 
 @media screen and (min-width:1001px) and (max-width: 1296px) {
@@ -67,6 +73,9 @@ ul {
   }  
    h5{
     font-size: 1.4em;
-  }  
+  } 
+  li{
+    font-size: 0.8em;
+  } 
 }
 

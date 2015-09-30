@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Restaurants Googler - Middletown,New Jersey</title>
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
     
 </head>
 <body>
@@ -26,13 +26,13 @@
             <div class="col-xs-6 col-md-6 col-lg-6">
                 <!--On chosing a filter,the infoWindow representing the marker for the filter opens up with info -->
                 <ul  class= "list-unstyled" data-bind="foreach: filterList" >
-                   <li data-bind="text: name,click:$parent.openMarker"></li>
+                   <li data-bind="text: name,click:$parent.openMarker,event:{mouseover:$parent.highlightMarker,mouseout:$parent.disableHighlighMarker}"></li>
                 </ul>
             </div>
         </div> 
         <div class="row">
             <!--Display the map from google maps api -->
-            <div id="map" class="col-xs-12 col-md-12 col-lg-12"></div>
+            <div id="map" class="col-xs-12 col-md-12 col-lg-12 img-responsive"></div>
         </div>     
     </div>
     <!--Calling google maps api async -->
