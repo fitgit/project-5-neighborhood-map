@@ -26,7 +26,7 @@
             <div class="col-xs-6 col-md-6 col-lg-6">
                 <!--On chosing a filter,the infoWindow representing the marker for the filter opens up with info -->
                 <ul  class= "list-unstyled" data-bind="foreach: filterList" >
-                   <li data-bind="text: name,click:$parent.openMarker,event:{mouseover:$parent.highlightMarker,mouseout:$parent.disableHighlighMarker}"></li>
+                   <li data-bind="text: name,click:$parent.openMarker,visible:$parent.listViewVisible,event:{mouseover:$parent.highlightMarker,mouseout:$parent.disableHighlighMarker}"></li>
                 </ul>
             </div>
         </div> 

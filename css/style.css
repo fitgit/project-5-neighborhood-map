@@ -13,10 +13,6 @@ h1 {
   color: white;
 }
 
-#map {
-  height: 700px;
-}
-
 .container {
   background-color: Lavender;
 }
@@ -34,7 +30,7 @@ ul {
   background-color: rgba(255,255,255,0.7);
 }
 
-@media screen and (min-width:1px)and (max-width: 450px){
+@media screen and (min-width:1px) and (max-width: 450px){
   body {
     font-size: 1.2em;
   }
@@ -47,6 +43,9 @@ ul {
   li{
     font-size: 0.4em;
   }
+   #map {
+    height: 500px;
+  }
 }
 
 @media screen and (min-width:451px) and (max-width: 1000px){
@@ -54,6 +53,9 @@ ul {
     font-size: 1.5em;
   }
   h1{
+    font-size: 1.5em;
+  }
+  h3{
     font-size: 1.4em;
   }
   h5{
@@ -62,9 +64,12 @@ ul {
   li{
     font-size: 0.6em;
   }
+  #map {
+    height: 500px;
+  }
 }
 
-@media screen and (min-width:1001px) and (max-width: 1296px) {
+@media screen and (min-width:1001px){
   body{
     font-size: 1.8em;
   }
@@ -77,5 +82,8 @@ ul {
   li{
     font-size: 0.8em;
   } 
+  #map {
+    height: 700px;
+  }
 }
 

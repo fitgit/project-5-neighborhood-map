@@ -45,6 +45,7 @@ function clearMarkers(){
 */	
 function changeColor(marker){
 	if ( marker.clicked === true){
+		map.panTo(marker.getPosition());
 		marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ marker.setAnimation(null); }, 5000);
@@ -62,7 +63,7 @@ function changeColor(marker){
  *	calls getLocationData, which does an API call to foursquare data.
 */
 function openInfoWindow(place,marker,infowindow){
-	
+	koViewModelInstance.listViewVisible(false);
 	//cacheing Location data, based on the first review feedback
 	//If not cached getLocationData from API.
 	if (typeof marker.infoWindowHtml === "undefined") {
@@ -181,9 +182,11 @@ var ViewModel = function (){
 	self.markers=ko.observableArray(markers);
 	self.filterList=ko.observableArray();
 	self.filter=ko.observable("");
+	self.listViewVisible=ko.observable(true);
 
 	//opensMarker when a list view item is clicked
 	self.openMarker = function(place){
+		//self.listViewVisible(false);
 		var marker=markers[place.index];
 		marker.clicked=true;
 		changeColor(marker);	
@@ -195,6 +198,7 @@ var ViewModel = function (){
      *	This method calls getFilterList , which creates a List of places matching the filter.
 	*/
 	self.filterMarkers = function(){
+		self.listViewVisible(true);
 		self.filterList.removeAll();
 		self.getFilterList();
 	};
